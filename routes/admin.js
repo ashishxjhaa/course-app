@@ -50,22 +50,29 @@ adminRouter.post('/signin', async function(req, res) {
 })
 
 adminRouter.post('/course', adminMiddleware, async function(req, res) {
-    const adminId = req.userId;
+    try {
+        const adminId = req.userId;
 
-    const { title, description, imageUrl, price } = req.body;
+        const { title, description, imageUrl, price } = req.body;
 
-    const course = await courseModel.create({
-        title: title,
-        description: description, 
-        imageUrl: imageUrl,
-        price: price,
-        creatorId: adminId
-    })
+        const course = await courseModel.create({
+            title: title,
+            description: description, 
+            imageUrl: imageUrl,
+            price: price,
+            creatorId: adminId
+        })
 
-    res.json({
-        message: "Course created",
-        courseId: course._id
-    })
+        res.json({
+            message: "Course created",
+            courseId: course._id
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: "Error creating course",
+            error: error.message
+        })
+    }
 })
 
 adminRouter.put('/course', adminMiddleware, async function(req, res) {
